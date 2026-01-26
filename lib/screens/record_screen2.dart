@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -196,7 +197,9 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
 
                           // 🔥 إيقاف وحفظ الملف
                           final filePath = await recorder.stopRecording();
-
+                          //this is for testing only, it should be commented out after confirming that the record is good
+                          AudioPlayer().play(DeviceFileSource(filePath));
+                          //end of the testing
                           setState(() {
                             isRecording = false;
                             isPaused = false;
