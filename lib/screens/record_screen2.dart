@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../services/audio_recorder.dart';
 import '../widgets/mic_button.dart';
@@ -17,6 +17,7 @@ class RecordScreen2 extends ConsumerStatefulWidget {
 class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   bool isRecording = false;
   bool isPaused = false;
+  bool doneRecording = false;
 
   /// true when the user is recording for the first letter, and false for when they are recording for the second letter
   bool isFirstPhase = true;
@@ -25,6 +26,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   int currentMaxSeconds = 5;
   int seconds = 0;
   Timer? _timer;
+  String? filePath;
 
   //initializing the record service
   final AudioRecorderService recorder = AudioRecorderService();
@@ -39,8 +41,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
           toggleRecording();
           isFirstPhase = false;
           currentMaxSeconds = 10;
-        }
-        else {
+        } else {
           stopRecording();
         }
       }
@@ -48,6 +49,11 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   }
 
   void toggleRecording() async {
+    if(!isRecording)
+      {
+        startRecording();
+        return;
+      }
     setState(() {
       isPaused = !isPaused;
     });
@@ -62,17 +68,18 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   }
 
   void stopRecording() async {
+    if (!isRecording) {
+      return;
+    }
     stopTimer();
 
     // stoping the record and saving it
-    final filePath = await recorder.stopRecording();
-    //todo: EID, delete this test part in production
-    //this is for testing only, it should be commented out after confirming that the record is good
-    AudioPlayer().play(DeviceFileSource(filePath));
-    //end of the testing
+    filePath = await recorder.stopRecording();
+
     setState(() {
       isRecording = false;
       isPaused = false;
+      doneRecording = true;
     });
 
     // displaying the saved file path
@@ -90,30 +97,33 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       isRecording = false;
       isPaused = false;
       seconds = 0;
+      doneRecording = false;
       currentMaxSeconds = 5;
       isFirstPhase = true;
     });
   }
 
   void startRecording() async {
-    if(isRecording) {
+    if (isRecording) {
       return;
     }
     setState(() {
       isRecording = true;
       currentMaxSeconds = 5;
       isFirstPhase = true;
-      isPaused=true;
+      isPaused = false;
     });
 
     if (isRecording) {
       seconds = 0;
-
+      startTimer();
       await recorder.startRecording();
-      // to let the user read the instructions first
-      await recorder.pauseRecording();
 
     }
+  }
+
+  void submitVoice() {
+    context.go('/sendvoice', extra: filePath);
   }
 
   void stopTimer() {
@@ -121,8 +131,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   }
 
   String formatTime(int totalSeconds) {
-    return "${totalSeconds.toString().padLeft(2, '0')}/${currentMaxSeconds
-        .toString().padLeft(2, '0')} s";
+    return "${totalSeconds.toString().padLeft(2, '0')}/${currentMaxSeconds.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -131,40 +140,9 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          MicButton(
-            isRecording: isRecording,
-            onTap:startRecording,
-          ),
+          MicButton(amplitudeStream: recorder.amplitudeStream,isRecording: isRecording, onTap: null),
 
           const SizedBox(height: 5),
-
-          if (!isRecording)
-            Column(
-              children: [
-                const SizedBox(height: 6),
-                const Icon(Icons.arrow_upward, color: Colors.white, size: 22),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    "Tap here to start recording",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-          const SizedBox(height: 30),
 
           Text(
             formatTime(seconds),
@@ -175,109 +153,121 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
             ),
           ),
 
-          if (isRecording)
+          Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Divider(color: Colors.white, thickness: 1),
+            ),
+          ),
+          SizedBox(height: 20,),
+          Text("Say the Pronounce",style: Theme.of(context).textTheme.displayMedium,),
+          SizedBox(height: 20,),
+          Text(
+            isFirstPhase ? '"AAA"' : '"OOO"',
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge
+                ?.copyWith(color: Colors.cyanAccent),
+          ),
+          SizedBox(height: 20,),
+          if (!isRecording) Column(children: [const SizedBox(height: 6)]),
+
+          const SizedBox(height: 30),
+
+
             Column(
               children: [
                 const SizedBox(height: 25),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    isFirstPhase?"press the play button and record a 5 seconds AAAA tone":"now record another 5 seconds but with OOOOO tone",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
+
                 Stack(
                   alignment: AlignmentGeometry.center,
-                  children:[
-                     Container(
-                       height: 60,
-                       width: 200,
-                      decoration:   BoxDecoration(
+                  children: [
+                    if (isRecording || doneRecording)
+                    Container(
+                      height: 60,
+                      width: 280,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(22),
                         shape: BoxShape.rectangle,
                         color: Colors.white,
                       ),
-                    )
-                    , Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        //cancel
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(255,187, 70, 72),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.close_outlined,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          onPressed: cancelRecording,
-                        ),
-                      ),
-
-                      const SizedBox(width: 20),
-
-                      //  Pause /  Resume
-                      Container(
-                        padding: EdgeInsets.all(15),
-                        decoration:  BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:Colors.white,
-                        ),
-                        child: Container(
-
-                          decoration:  BoxDecoration(
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (isRecording || doneRecording)
+                        Container(
+                          //cancel
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isPaused ? Color.fromARGB(255,187, 70, 72):Color.fromARGB(255,34, 75, 68),
+                            color: Color.fromARGB(255, 187, 70, 72),
                           ),
                           child: IconButton(
-                            icon: Icon(
-                              isPaused ? Icons.play_arrow : Icons.pause,
+                            icon: const Icon(
+                              Icons.close_outlined,
                               color: Colors.white,
-                              size: 32,
+                              size: 28,
                             ),
-                            onPressed: toggleRecording,
+                            onPressed: cancelRecording,
                           ),
                         ),
-                      ),
 
-                      const SizedBox(width: 20),
+                        const SizedBox(width: 20),
 
-                      //  Save
-                      // commented out bc we dont want the user to be able to end the recording early
-                      //  Container(
-                      //  decoration: const BoxDecoration(
-                      //    shape: BoxShape.circle,
-                      //    color: Colors.white,
-                      //  ),
-                      //  child: IconButton(
-                      //    icon: const Icon(
-                      //      Icons.check,
-                      //      color: Colors.black,
-                      //      size: 30,
-                      //    ),
-                      //    onPressed: stopRecording,
-                      //  ),
-                      //),
+                        //  Pause /  Resume
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (isPaused || (!isRecording && !doneRecording))// if not recording and didnt finish recording that means we didnt start recording yet, so the color be red
+                                  ? Color.fromARGB(255, 187, 70, 72)
+                                  : (!doneRecording
+                                        ? Color.fromARGB(255, 34, 75, 68)
+                                        : Colors.grey),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                (isPaused || doneRecording || !isRecording)
+                                    ? Icons.play_arrow
+                                    : Icons.pause,
+                                color: Colors.white,
+                                size: 80,
+                              ),
+                              onPressed: doneRecording ? null : toggleRecording,
+                            ),
+                          ),
+                        ),
 
-                    ],
-                  ),
-                ]),
+                        const SizedBox(width: 20),
+
+                        //  submit
+                        if (isRecording || doneRecording)
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: doneRecording ? Colors.cyan : Colors.grey,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            onPressed: doneRecording
+                                ? submitVoice
+                                : null, // only enable when the user finishes all the recording
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
         ],
@@ -285,9 +275,9 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
     );
   }
 
-
   @override
   void dispose() {
+    recorder.stopRecording();
     _timer?.cancel();
     super.dispose();
   }

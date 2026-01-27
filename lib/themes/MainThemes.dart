@@ -17,7 +17,7 @@ abstract class Mainthemes {
       onSecondary: const Color.fromARGB(255, 34, 75, 68),
       error: Colors.pink,
       onError: Colors.red,
-      surface: Colors.greenAccent,
+      surface: const Color.fromARGB(255, 34, 75, 68),
       onSurface: Colors.white,
     ),
   );
@@ -30,7 +30,7 @@ abstract class Mainthemes {
       elevation: 0,
     ),
     colorScheme: ColorScheme(
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       primary: Colors.white,
       onPrimary:  Color.fromARGB(255, 34, 75, 68),
       secondary: const Color.fromARGB(255, 34, 75, 68),
@@ -38,7 +38,7 @@ abstract class Mainthemes {
       error: Colors.pink,
       onError: Colors.red,
       surface: Colors.white30,
-      onSurface: Colors.greenAccent,
+      onSurface: const Color.fromARGB(255, 34, 75, 68),
     ),
   );
 }

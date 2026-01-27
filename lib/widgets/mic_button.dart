@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class MicButton extends StatefulWidget {
-  // نستقبل الحالة من الخارج
+  final Stream<double> amplitudeStream;
   final bool isRecording;
-  // نستقبل حدث الضغط من الخارج
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+
 
   const MicButton({
     super.key,
+    required this.amplitudeStream,
     required this.isRecording,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
@@ -19,32 +23,33 @@ class MicButton extends StatefulWidget {
 class _MicButtonState extends State<MicButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+  StreamSubscription<double>? _amplitudeSubscription;
+  double _amplitude = 0.0;
 
   @override
   void initState() {
     super.initState();
 
+    // small pulsing animation even if amplitude is low
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
-    );
+    )..repeat(reverse: true);
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.15,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    // listen to amplitude stream
+     _amplitudeSubscription = widget.amplitudeStream.listen((amp) {
+      setState(() {
+        _amplitude = amp;
+      });
+    });
   }
 
   @override
   void didUpdateWidget(covariant MicButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // إذا الحالة تغيرت من الخارج → شغّل الأنيميشن أو أوقفه
     if (widget.isRecording) {
-      _controller.repeat(reverse: true);
+      if (!_controller.isAnimating) _controller.repeat(reverse: true);
     } else {
       _controller.stop();
       _controller.reset();
@@ -54,29 +59,55 @@ class _MicButtonState extends State<MicButton>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap, // الضغط يأتي من الخارج
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: widget.isRecording ? Colors.cyan: Color.fromARGB(255,187, 70, 72),
-          ),
-          child: Icon(
-            widget.isRecording ? Icons.mic_none : Icons.mic,
-            size: 80,
-            color: Colors.white,
-          ),
-        ),
+      onTap: widget.onTap,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final baseSize = 80.0;
+          final waveCount = 3;
+          final waveSpacing = 15.0;
+
+          return SizedBox(
+            width: baseSize + waveCount * waveSpacing * 2,
+            height: baseSize + waveCount * waveSpacing * 2,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // waves
+                for (int i = 1; i <= waveCount; i++)
+                  Container(
+                    width: baseSize + i * waveSpacing * (1 + _amplitude),
+                    height: baseSize + i * waveSpacing * (1 + _amplitude),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.cyan.withOpacity(0.3 / i),
+                    ),
+                  ),
+                // base mic icon
+                Container(
+                  width: baseSize,
+                  height: baseSize,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.cyan,
+                  ),
+                  child: Icon(
+                    widget.isRecording ? Icons.mic_none : Icons.mic,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-//to not cause memory leak
   @override
   void dispose() {
+    _amplitudeSubscription?.cancel();
     _controller.dispose();
     super.dispose();
   }

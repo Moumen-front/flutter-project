@@ -22,11 +22,9 @@ dependencies:
   riverpod_lint: ^3.0.3
   # Audio recording + file path
   record: ^6.1.2
-  path_provider: ^2.1.2
+  path_provider: ^2.1.2 #todo: this doesnt support web so search for something else
+  http: ^1.6.0
 
-  #todo: EID, delete this in production
-# for playing back the record (for test purposes only)
-  audioplayers: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

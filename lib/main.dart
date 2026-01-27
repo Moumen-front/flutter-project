@@ -1,4 +1,5 @@
 import 'package:first_project/screens/land_screen.dart';
+import 'package:first_project/screens/send_voice_screen.dart';
 import 'package:first_project/themes/MainThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +43,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     leading: state.uri.path != '/'
                         ? IconButton(
                             onPressed: () {
-                              context.pop();
+                              if (context.canPop()) {
+                                context.pop();
+                              } else {
+                                context.go('/');
+                              }
                             },
                             icon: Icon(Icons.arrow_back_ios_new),
                             color: Theme.of(context).colorScheme.onPrimary,
@@ -130,6 +135,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               );
             },
           ),
+          GoRoute(
+            path: '/sendvoice',
+            name: 'send voice',
+            builder: (context, state) {
+              final path = state.extra as String; // pass wav path via extra
+              return SendVoiceScreen(wavPath: path);
+
+            },
+          )
+
         ],
       ),
     ],
