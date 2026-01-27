@@ -1,4 +1,5 @@
 import 'package:first_project/screens/land_screen.dart';
+import 'package:first_project/themes/MainThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,9 @@ import './screens/record_screen2.dart';
 
 //router provider
 final routerProvider = Provider<GoRouter>((ref) {
+
+
+
   return GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
@@ -18,44 +22,58 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            backgroundColor: const Color.fromARGB(255,34, 75, 68),
+          String routeName = state.topRoute?.path??'';
 
-            appBar: AppBar(
-              backgroundColor: const Color.fromARGB(255,34, 75, 68),
-              elevation: 0,
-              leading: state.uri.path != '/'
-                  ? IconButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      icon: Icon(Icons.arrow_back_ios_new),
-                      color: Colors.white,
-                    )
-                  : const SizedBox.shrink(),
+           ThemeData theme = switch (routeName) {
 
-              title: Text(
-                state.topRoute?.name ?? "Error, no name for this route",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.help_outline,
-                    color: Colors.white,
-                    size: 30,
+            '/voice' => Mainthemes.greenBackgroundTheme,
+            _ => Mainthemes.whiteBackgroundTheme,
+          };
+
+          return Theme(
+            data:    theme,
+            child: Builder(
+              builder: (context) {
+                return Scaffold(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
+                  appBar: AppBar(
+                    elevation: 0,
+                    leading: state.uri.path != '/'
+                        ? IconButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            icon: Icon(Icons.arrow_back_ios_new),
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          )
+                        : const SizedBox.shrink(),
+
+                    title: Text(
+                      state.topRoute?.name ?? "Error, no name for this route",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    centerTitle: true,
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.help_outline,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          size: 30,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                  onPressed: () {},
-                ),
-              ],
-            ),
 
-            body: child,
+                  body: child,
+                );
+              }
+            ),
           );
         },
 
@@ -65,7 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: 'NeuroVive',
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: const LandScreen(),
+              child:  const LandScreen(),
               transitionDuration: const Duration(milliseconds: 300),
               reverseTransitionDuration: const Duration(milliseconds: 300),
               transitionsBuilder:
@@ -86,7 +104,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: const RecordScreen2(),
+                child:  const RecordScreen2(),
                 transitionDuration: const Duration(milliseconds: 300),
                 // Hero duration
                 transitionsBuilder:

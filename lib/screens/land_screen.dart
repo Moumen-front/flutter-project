@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,12 +28,16 @@ class LandScreen extends ConsumerWidget {
               runSpacing: 12,
               children: [
                   AnimatedTextButton(
+                    normalColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                     onPressed: () {
                       context.push('/voice');
                     },
                     text: "Voice",
                   ),
                  AnimatedTextButton(
+                   normalColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                     onPressed: () {
                       context.push('/handwriting');
                     },
