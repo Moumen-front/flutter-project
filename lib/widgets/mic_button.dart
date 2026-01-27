@@ -60,19 +60,20 @@ class _MicButtonState extends State<MicButton>
         child: Container(
           width: 120,
           height: 120,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: widget.isRecording ? Colors.cyan: Color.fromARGB(255,187, 70, 72),
           ),
           child: Icon(
-            widget.isRecording ? Icons.stop : Icons.mic,
+            widget.isRecording ? Icons.mic_none : Icons.mic,
             size: 80,
-            color: Colors.deepOrangeAccent,
+            color: Colors.white,
           ),
         ),
       ),
     );
   }
+
 //to not cause memory leak
   @override
   void dispose() {

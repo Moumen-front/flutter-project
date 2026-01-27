@@ -122,7 +122,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
 
   String formatTime(int totalSeconds) {
     return "${totalSeconds.toString().padLeft(2, '0')}/${currentMaxSeconds
-        .toString().padLeft(2, '0')}";
+        .toString().padLeft(2, '0')} s";
   }
 
   @override
@@ -198,64 +198,86 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      //cancel
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
+                Stack(
+                  alignment: AlignmentGeometry.center,
+                  children:[
+                     Container(
+                       height: 60,
+                       width: 200,
+                      decoration:   BoxDecoration(
+                        borderRadius: BorderRadius.circular(22),
+                        shape: BoxShape.rectangle,
                         color: Colors.white,
                       ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.black,
-                          size: 28,
+                    )
+                    , Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        //cancel
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255,187, 70, 72),
                         ),
-                        onPressed: cancelRecording,
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    //  Pause /  Resume
-                    Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.deepOrangeAccent,
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          isPaused ? Icons.play_arrow : Icons.pause,
-                          color: Colors.black,
-                          size: 32,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.close_outlined,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          onPressed: cancelRecording,
                         ),
-                        onPressed: toggleRecording,
                       ),
-                    ),
 
-                    const SizedBox(width: 20),
+                      const SizedBox(width: 20),
 
-                    //  Save
-                    // commented out bc we dont want the user to be able to end the recording early
-                    //  Container(
-                    //  decoration: const BoxDecoration(
-                    //    shape: BoxShape.circle,
-                    //    color: Colors.white,
-                    //  ),
-                    //  child: IconButton(
-                    //    icon: const Icon(
-                    //      Icons.check,
-                    //      color: Colors.black,
-                    //      size: 30,
-                    //    ),
-                    //    onPressed: stopRecording,
-                    //  ),
-                    //),
+                      //  Pause /  Resume
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration:  BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:Colors.white,
+                        ),
+                        child: Container(
 
-                  ],
-                ),
+                          decoration:  BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isPaused ? Color.fromARGB(255,187, 70, 72):Color.fromARGB(255,34, 75, 68),
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              isPaused ? Icons.play_arrow : Icons.pause,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                            onPressed: toggleRecording,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(width: 20),
+
+                      //  Save
+                      // commented out bc we dont want the user to be able to end the recording early
+                      //  Container(
+                      //  decoration: const BoxDecoration(
+                      //    shape: BoxShape.circle,
+                      //    color: Colors.white,
+                      //  ),
+                      //  child: IconButton(
+                      //    icon: const Icon(
+                      //      Icons.check,
+                      //      color: Colors.black,
+                      //      size: 30,
+                      //    ),
+                      //    onPressed: stopRecording,
+                      //  ),
+                      //),
+
+                    ],
+                  ),
+                ]),
               ],
             ),
         ],

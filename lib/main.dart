@@ -19,10 +19,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (context, state, child) {
           return Scaffold(
-            backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+            backgroundColor: const Color.fromARGB(255,34, 75, 68),
 
             appBar: AppBar(
-              backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+              backgroundColor: const Color.fromARGB(255,34, 75, 68),
               elevation: 0,
               leading: state.uri.path != '/'
                   ? IconButton(
@@ -82,7 +82,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/voice',
-            name: 'Record Voice',
+            name: 'Voice Record',
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
