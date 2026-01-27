@@ -73,4 +73,10 @@ class _MicButtonState extends State<MicButton>
       ),
     );
   }
+//to not cause memory leak
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }
