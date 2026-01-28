@@ -60,7 +60,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
                 break;
 
               case JobStatus.done:
-              // handled later
+              // will be handled later
                 break;
             }
           },
@@ -68,7 +68,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text(
-                  "Error happened, try again",
+                  "Error occurred, try again",
                 ),
                 duration: Duration(seconds: 4),
               ),
