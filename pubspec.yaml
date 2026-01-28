@@ -37,3 +37,8 @@ flutter:
 
   assets:
      - assets/images/
+
+  fonts:
+    - family: Neurovive
+      fonts:
+        - asset: fonts/Neurovive.ttf

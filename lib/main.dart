@@ -1,3 +1,4 @@
+import 'package:first_project/icons/neurovive_icons.dart';
 import 'package:first_project/screens/land_screen.dart';
 import 'package:first_project/screens/send_voice_screen.dart';
 import 'package:first_project/themes/MainThemes.dart';
@@ -66,7 +67,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                           ?
                       IconButton(
                         icon: Icon(
-                          Icons.help_outline,
+                          Neurovive.info,
                           color: Theme.of(context).colorScheme.onPrimary,
                           size: 30,
                         ),
@@ -201,14 +202,14 @@ Widget _buildHelpInstructionsSheet(BuildContext context) {
                   GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
                     child: const Icon(
-                      Icons.close,
+                      Neurovive.close,
                       color: Color(0xFFB22222),
-                      size: 28,
+                      size: 15,
                     ),
                   ),
                   const SizedBox(width: 16),
                   const Text(
-                    'Voice Test Instructions',
+                    '     Voice Test Instructions',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -233,7 +234,7 @@ Widget _buildHelpInstructionsSheet(BuildContext context) {
                   ),
                   _buildBulletPoint(
                     'Position Your Phone:',
-                    'Hold the device approximately 8 inches (20 cm) from your mouth.',
+                    'Hold the device approximately 20 cm (8 inches) from your mouth.',
                   ),
                   const SizedBox(height: 16),
                   _buildDashedDivider(),
@@ -243,11 +244,11 @@ Widget _buildHelpInstructionsSheet(BuildContext context) {
                   const SizedBox(height: 8),
                   _buildBulletPoint(
                     'Step 1:',
-                    'Sustained "AAA" Take a deep breath and make a steady "AAA" sound (as in "apple") for 5 seconds.',
+                    'Sustained "AAA" Take a deep breath and make a steady "AAA" sound (as in "apple") for 3 seconds.',
                   ),
                   _buildBulletPoint(
                     'Step 2:',
-                    'Sustained "OOO" The app will transition automatically. Make a steady "OOO" sound (as in "boot") for another 5 seconds.',
+                    'Sustained "OOO" The app will transition automatically. Make a steady "OOO" sound (as in "boot") for another 3 seconds.',
                   ),
                   const SizedBox(height: 16),
                   _buildDashedDivider(),

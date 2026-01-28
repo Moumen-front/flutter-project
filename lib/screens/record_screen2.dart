@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:first_project/icons/neurovive_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -176,7 +177,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
             ),
             SizedBox(height: 20),
             Text(
-              isFirstPhase ? '"AAA"' : '"OOO"',
+              isFirstPhase ? '“AAA”' : '“OOO”',
               style: const TextStyle(
                 fontSize: 60,
                 fontWeight: FontWeight.bold,
@@ -216,10 +217,10 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                           ),
                           child: IconButton(
                             icon: const Icon(
-                              Icons.close_rounded,
+                              Neurovive.close,
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
-                              size: 28,
+                              size: 15,
                             ),
                             onPressed: cancelRecording,
                           ),
@@ -247,9 +248,10 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                         ),
                         child: IconButton(
                           icon: Icon(
+
                             (isPaused || doneRecording || !isRecording)
                                 ? Icons.play_arrow_rounded
-                                : Icons.pause_rounded,
+                                : Icons.pause,
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
                             size: 55,
@@ -272,7 +274,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                           ),
                           child: IconButton(
                             icon: const Icon(
-                              Icons.check_rounded,
+                              Icons.check,
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
                               size: 30,
