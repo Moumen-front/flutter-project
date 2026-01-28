@@ -40,7 +40,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
             switch (result.status) {
               case JobStatus.uploaded:
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Uploaded successfully")),
+                  const SnackBar(content: Text("Uploaded successfully"),duration: Duration(seconds: 2),),
                 );
                 ///todo: EID, make the /analysing_screen and the user shouldd be sent to there with the new jobId instead
                 context.go('/handwriting'); // test route
@@ -52,6 +52,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
                     content: Text(
                       "Upload failed, please record and upload again",
                     ),
+                    duration: Duration(seconds: 4),
                   ),
                 );
                 context.go('/voice');
@@ -68,6 +69,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
                 content: Text(
                   "Error connecting to the internet",
                 ),
+                duration: Duration(seconds: 4),
               ),
             );
             context.go('/voice');

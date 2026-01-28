@@ -63,8 +63,8 @@ class _MicButtonState extends State<MicButton>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          final baseSize = 80.0;
-          final waveCount = 3;
+          final baseSize = 150.0;
+          final waveCount = 2;
           final waveSpacing = 15.0;
 
           return SizedBox(
@@ -74,26 +74,27 @@ class _MicButtonState extends State<MicButton>
               alignment: Alignment.center,
               children: [
                 // waves
+                if(widget.isRecording)
                 for (int i = 1; i <= waveCount; i++)
                   Container(
                     width: baseSize + i * waveSpacing * (1 + _amplitude),
                     height: baseSize + i * waveSpacing * (1 + _amplitude),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.cyan.withOpacity(0.3 / i),
+                      color: Color.fromARGB(255,93, 245, 225).withOpacity(0.3 / i),
                     ),
                   ),
                 // base mic icon
                 Container(
                   width: baseSize,
                   height: baseSize,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.cyan,
+                    color: widget.isRecording ?const Color.fromARGB(255,93, 245, 225) : const Color.fromARGB(255,187, 70, 72),
                   ),
                   child: Icon(
                     widget.isRecording ? Icons.mic_none : Icons.mic,
-                    size: 40,
+                    size: 100,
                     color: Colors.white,
                   ),
                 ),

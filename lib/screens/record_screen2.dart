@@ -22,8 +22,10 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   /// true when the user is recording for the first letter, and false for when they are recording for the second letter
   bool isFirstPhase = true;
 
-  ///changes from 5 to 10 when the user finishes recording the first letter
-  int currentMaxSeconds = 5;
+  ///max seconds for each phase
+  int MaxSeconds= 3;
+  ///changes from 3 to 6 when the user finishes recording the first letter
+  int currentMaxSeconds = 3;
   int seconds = 0;
   Timer? _timer;
   String? filePath;
@@ -40,7 +42,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
         if (isFirstPhase) {
           toggleRecording();
           isFirstPhase = false;
-          currentMaxSeconds = 10;
+          currentMaxSeconds += MaxSeconds;
         } else {
           stopRecording();
         }
@@ -49,11 +51,10 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   }
 
   void toggleRecording() async {
-    if(!isRecording)
-      {
-        startRecording();
-        return;
-      }
+    if (!isRecording) {
+      startRecording();
+      return;
+    }
     setState(() {
       isPaused = !isPaused;
     });
@@ -83,9 +84,9 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
     });
 
     // displaying the saved file path
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Saved: $filePath")));
+    // ScaffoldMessenger.of(
+    //   context,
+    // ).showSnackBar(SnackBar(content: Text("Saved: $filePath")));
   }
 
   void cancelRecording() async {
@@ -98,7 +99,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       isPaused = false;
       seconds = 0;
       doneRecording = false;
-      currentMaxSeconds = 5;
+      currentMaxSeconds = MaxSeconds;
       isFirstPhase = true;
     });
   }
@@ -109,7 +110,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
     }
     setState(() {
       isRecording = true;
-      currentMaxSeconds = 5;
+      currentMaxSeconds = MaxSeconds;
       isFirstPhase = true;
       isPaused = false;
     });
@@ -118,7 +119,6 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       seconds = 0;
       startTimer();
       await recorder.startRecording();
-
     }
   }
 
@@ -140,14 +140,18 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          MicButton(amplitudeStream: recorder.amplitudeStream,isRecording: isRecording, onTap: null),
+          MicButton(
+            amplitudeStream: recorder.amplitudeStream,
+            isRecording: isRecording,
+            onTap: null,
+          ),
 
           const SizedBox(height: 5),
 
           Text(
             formatTime(seconds),
             style: const TextStyle(
-              fontSize: 42,
+              fontSize: 80,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -159,117 +163,128 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
               child: Divider(color: Colors.white, thickness: 1),
             ),
           ),
-          SizedBox(height: 20,),
-          Text("Say the Pronounce",style: Theme.of(context).textTheme.displayMedium,),
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
+          Text(
+            "Say the Pronounce",
+            style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 20),
           Text(
             isFirstPhase ? '"AAA"' : '"OOO"',
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.cyanAccent),
+            style: const TextStyle(
+              fontSize: 60,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 93, 245, 225),
+            ),
           ),
-          SizedBox(height: 20,),
-          if (!isRecording) Column(children: [const SizedBox(height: 6)]),
+          SizedBox(height: 10),
 
-          const SizedBox(height: 30),
+          Column(
+            children: [
+              const SizedBox(height: 25),
 
-
-            Column(
-              children: [
-                const SizedBox(height: 25),
-
-                Stack(
-                  alignment: AlignmentGeometry.center,
-                  children: [
-                    if (isRecording || doneRecording)
+              Stack(
+                alignment: AlignmentGeometry.center,
+                children: [
+                  if (isRecording || doneRecording)
                     Container(
-                      height: 60,
-                      width: 280,
+                      height: 90,
+                      width: MediaQuery.of(context).size.width * 0.89,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(22),
                         shape: BoxShape.rectangle,
                         color: Colors.white,
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (isRecording || doneRecording)
-                        Container(
-                          //cancel
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromARGB(255, 187, 70, 72),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.close_outlined,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                            onPressed: cancelRecording,
-                          ),
+                  if (isRecording || doneRecording)
+                    Positioned(
+
+                      left: MediaQuery.of(context).size.width * 0.1,
+                      child: Container(
+                        //cancel
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+
+                          color: Color.fromARGB(255, 187, 70, 72),
                         ),
-
-                        const SizedBox(width: 20),
-
-                        //  Pause /  Resume
-                        Container(
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.close_rounded,
                             color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            size: 28,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (isPaused || (!isRecording && !doneRecording))// if not recording and didnt finish recording that means we didnt start recording yet, so the color be red
-                                  ? Color.fromARGB(255, 187, 70, 72)
-                                  : (!doneRecording
-                                        ? Color.fromARGB(255, 34, 75, 68)
-                                        : Colors.grey),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                (isPaused || doneRecording || !isRecording)
-                                    ? Icons.play_arrow
-                                    : Icons.pause,
-                                color: Colors.white,
-                                size: 80,
-                              ),
-                              onPressed: doneRecording ? null : toggleRecording,
-                            ),
-                          ),
+                          onPressed: cancelRecording,
                         ),
-
-                        const SizedBox(width: 20),
-
-                        //  submit
-                        if (isRecording || doneRecording)
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: doneRecording ? Colors.cyan : Colors.grey,
-                          ),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: doneRecording
-                                ? submitVoice
-                                : null, // only enable when the user finishes all the recording
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+
+                  //  Pause /  Resume
+                  Container(
+                    padding: EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            (isPaused ||
+                                (!isRecording &&
+                                    !doneRecording)) // if not recording and didnt finish recording that means we didnt start recording yet, so the color be red
+                            ? Color.fromARGB(255, 187, 70, 72)
+                            : (!doneRecording
+                                  ? Color.fromARGB(255, 34, 75, 68)
+                                  : Colors.grey),
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          (isPaused || doneRecording || !isRecording)
+                              ? Icons.play_arrow_rounded
+                              : Icons.pause_rounded,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          size: 55,
+                        ),
+                        onPressed: doneRecording ? null : toggleRecording,
+                      ),
+                    ),
+                  ),
+
+                  //  submit
+                  if (isRecording || doneRecording)
+                    Positioned(
+                      right: MediaQuery.of(context).size.width * 0.1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: doneRecording
+                              ? Color.fromARGB(255, 106, 210, 196)
+                              : Colors.grey,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.check_rounded,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            size: 30,
+                          ),
+                          onPressed: doneRecording
+                              ? submitVoice
+                              : null, // only enable when the user finishes all the recording
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
