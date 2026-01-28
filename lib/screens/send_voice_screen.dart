@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../notifiers/voice_upload_notifier.dart';
+import '../widgets/uploading_loading.dart';
 
 class SendVoiceScreen extends ConsumerStatefulWidget {
   final String wavPath;
@@ -67,7 +68,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text(
-                  "Error connecting to the internet",
+                  "Error happened, try again",
                 ),
                 duration: Duration(seconds: 4),
               ),
@@ -81,16 +82,12 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) context.go('/');
-      },
-      child: Scaffold(
-        body: state.isLoading
-            ? const Center(///todo: make the uploading indicator here
-          child: CircularProgressIndicator(color: Colors.black),
+    //  onPopInvokedWithResult: (didPop, _) {if (!didPop) context.go('/');}, //disabled for now so that the user cant go back while uploading, do the same while anylksis is in progress too
+      child:  state.isLoading || state.value == null
+            ? const Center(
+          child: CircularLoadingIndicator(),
         )
-            : const SizedBox.shrink(), // UI is driven by navigation
-      ),
+            : const SizedBox.shrink(),
     );
   }
 }

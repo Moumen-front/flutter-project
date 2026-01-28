@@ -136,156 +136,159 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MicButton(
-            amplitudeStream: recorder.amplitudeStream,
-            isRecording: isRecording,
-            onTap: null,
-          ),
-
-          const SizedBox(height: 5),
-
-          Text(
-            formatTime(seconds),
-            style: const TextStyle(
-              fontSize: 80,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return PopScope(
+      canPop: false,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MicButton(
+              amplitudeStream: recorder.amplitudeStream,
+              isRecording: isRecording,
+              onTap: null,
             ),
-          ),
 
-          Center(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Divider(color: Colors.white, thickness: 1),
+            const SizedBox(height: 5),
+
+            Text(
+              formatTime(seconds),
+              style: const TextStyle(
+                fontSize: 80,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Say the Pronounce",
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+
+            Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.85,
+                child: Divider(color: Colors.white, thickness: 1),
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            isFirstPhase ? '"AAA"' : '"OOO"',
-            style: const TextStyle(
-              fontSize: 60,
-              fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 93, 245, 225),
+            SizedBox(height: 20),
+            Text(
+              "Say the Pronounce",
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-          SizedBox(height: 10),
+            SizedBox(height: 20),
+            Text(
+              isFirstPhase ? '"AAA"' : '"OOO"',
+              style: const TextStyle(
+                fontSize: 60,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 93, 245, 225),
+              ),
+            ),
+            SizedBox(height: 10),
 
-          Column(
-            children: [
-              const SizedBox(height: 25),
+            Column(
+              children: [
+                const SizedBox(height: 25),
 
-              Stack(
-                alignment: AlignmentGeometry.center,
-                children: [
-                  if (isRecording || doneRecording)
-                    Container(
-                      height: 90,
-                      width: MediaQuery.of(context).size.width * 0.89,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        shape: BoxShape.rectangle,
-                        color: Colors.white,
-                      ),
-                    ),
-                  if (isRecording || doneRecording)
-                    Positioned(
-
-                      left: MediaQuery.of(context).size.width * 0.1,
-                      child: Container(
-                        //cancel
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-
-                          color: Color.fromARGB(255, 187, 70, 72),
+                Stack(
+                  alignment: AlignmentGeometry.center,
+                  children: [
+                    if (isRecording || doneRecording)
+                      Container(
+                        height: 90,
+                        width: MediaQuery.of(context).size.width * 0.89,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22),
+                          shape: BoxShape.rectangle,
+                          color: Colors.white,
                         ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.close_rounded,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            size: 28,
+                      ),
+                    if (isRecording || doneRecording)
+                      Positioned(
+
+                        left: MediaQuery.of(context).size.width * 0.1,
+                        child: Container(
+                          //cancel
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+
+                            color: Color.fromARGB(255, 187, 70, 72),
                           ),
-                          onPressed: cancelRecording,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.close_rounded,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              size: 28,
+                            ),
+                            onPressed: cancelRecording,
+                          ),
                         ),
                       ),
-                    ),
 
-                  //  Pause /  Resume
-                  Container(
-                    padding: EdgeInsets.all(25),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Container(
+                    //  Pause /  Resume
+                    Container(
+                      padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color:
-                            (isPaused ||
-                                (!isRecording &&
-                                    !doneRecording)) // if not recording and didnt finish recording that means we didnt start recording yet, so the color be red
-                            ? Color.fromARGB(255, 187, 70, 72)
-                            : (!doneRecording
-                                  ? Color.fromARGB(255, 34, 75, 68)
-                                  : Colors.grey),
+                        color: Colors.white,
                       ),
-                      child: IconButton(
-                        icon: Icon(
-                          (isPaused || doneRecording || !isRecording)
-                              ? Icons.play_arrow_rounded
-                              : Icons.pause_rounded,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          size: 55,
-                        ),
-                        onPressed: doneRecording ? null : toggleRecording,
-                      ),
-                    ),
-                  ),
-
-                  //  submit
-                  if (isRecording || doneRecording)
-                    Positioned(
-                      right: MediaQuery.of(context).size.width * 0.1,
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: doneRecording
-                              ? Color.fromARGB(255, 106, 210, 196)
-                              : Colors.grey,
+                          color:
+                              (isPaused ||
+                                  (!isRecording &&
+                                      !doneRecording)) // if not recording and didnt finish recording that means we didnt start recording yet, so the color be red
+                              ? Color.fromARGB(255, 187, 70, 72)
+                              : (!doneRecording
+                                    ? Color.fromARGB(255, 34, 75, 68)
+                                    : Colors.grey),
                         ),
                         child: IconButton(
-                          icon: const Icon(
-                            Icons.check_rounded,
+                          icon: Icon(
+                            (isPaused || doneRecording || !isRecording)
+                                ? Icons.play_arrow_rounded
+                                : Icons.pause_rounded,
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
-                            size: 30,
+                            size: 55,
                           ),
-                          onPressed: doneRecording
-                              ? submitVoice
-                              : null, // only enable when the user finishes all the recording
+                          onPressed: doneRecording ? null : toggleRecording,
                         ),
                       ),
                     ),
-                ],
-              ),
-            ],
-          ),
-        ],
+
+                    //  submit
+                    if (isRecording || doneRecording)
+                      Positioned(
+                        right: MediaQuery.of(context).size.width * 0.1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: doneRecording
+                                ? Color.fromARGB(255, 106, 210, 196)
+                                : Colors.grey,
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.check_rounded,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              size: 30,
+                            ),
+                            onPressed: doneRecording
+                                ? submitVoice
+                                : null, // only enable when the user finishes all the recording
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
