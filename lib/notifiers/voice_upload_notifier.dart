@@ -2,35 +2,52 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './../services/api.dart';
 
 enum JobStatus {
-  done,      // 0
-  uploaded,  // 1
-  failed,    // 2
+  success,      // 0
+  error,    // 1
 }
 
 class VoiceResponse {
   final JobStatus status;
-  final String? jobId;
-  final bool? prediction;
+  final String? prediction;
   final double? confidence;
+  final String? message;
 
   VoiceResponse({
     required this.status,
-    this.jobId,
     this.prediction,
     this.confidence,
+    this.message
   });
+
+  @override
+  String toString()
+  {
+    switch(status)
+    {
+      case  JobStatus.success:
+        return "the results are \r\n "
+            "Prediction: $prediction \r\n"
+            "Confidence: $confidence \r\n";
+        break;
+      case JobStatus.error: // this will not occuire since we will go back to the send voice screen instead of here
+        return "error happened \r\n "
+            "Error: $message \r\n";
+        break;
+    }
+    return "impossible error";
+  }
+
 
   factory VoiceResponse.fromJson(Map<String, dynamic> json) {
     return VoiceResponse(
       status: switch (json['status']) {
-        'done' => JobStatus.done,
-        'uploaded' => JobStatus.uploaded,
-        'failed' => JobStatus.failed,
-        _ => JobStatus.failed,
+        'success' => JobStatus.success,
+        'error' => JobStatus.error,
+        _ => JobStatus.error,
       },
-      jobId: json['jobId'] as String?,
-      prediction: json['prediction'] as bool?,
+      prediction: json['prediction'] as String?,
       confidence: (json['confidence'] as num?)?.toDouble(),
+      message: json['message'] as String?,
     );
   }
 }
@@ -56,9 +73,9 @@ class VoiceUploadNotifier extends AsyncNotifier<VoiceResponse?> {
 
       ///it has
       ///final JobStatus status;
-      ///final String? jobId;
       ///final bool? prediction;
       ///final double? confidence;
+      ///final String? message;
       ///
       ///
 

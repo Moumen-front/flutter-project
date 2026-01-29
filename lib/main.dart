@@ -1,5 +1,7 @@
 import 'package:first_project/icons/neurovive_icons.dart';
+import 'package:first_project/notifiers/voice_upload_notifier.dart';
 import 'package:first_project/screens/land_screen.dart';
+import 'package:first_project/screens/result_screen.dart';
 import 'package:first_project/screens/send_voice_screen.dart';
 import 'package:first_project/themes/MainThemes.dart';
 import 'package:first_project/widgets/analysis_loading.dart';
@@ -34,59 +36,74 @@ final routerProvider = Provider<GoRouter>((ref) {
             data: theme,
             child: Builder(
               builder: (context) {
-                final String pageName = state.topRoute?.name ?? "Error, no name for this route";
+                final String pageName = state.topRoute?.name ??
+                    "Error, no name for this route";
                 final String currentPath = state.uri.path;
                 return Scaffold(
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  backgroundColor: Theme
+                      .of(context)
+                      .scaffoldBackgroundColor,
 
                   appBar: AppBar(
                     elevation: 0,
-                    leading: !(currentPath == '/' || currentPath == '/sendvoice' || currentPath == '/voice') ///todo: remove /voice from here when you add the landing screen
+                    leading: !(currentPath == '/' ||
+                        currentPath == '/sendvoice' || currentPath == '/voice')
+
+                    ///todo: remove /voice from here when you add the landing screen
                         ? IconButton(
-                            onPressed: () {
-                              if (context.canPop()) {
-                                context.pop();
-                              } else {
-                                context.go('/');
-                              }
-                            },
-                            icon: Icon(Icons.arrow_back_ios_new),
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          )
+                      onPressed: () {
+                       handleBack(context);
+                      },
+                      icon: Icon(Icons.arrow_back_ios_new),
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onPrimary,
+                    )
                         : const SizedBox.shrink(),
 
                     title: Text(
-                      pageName == '#'?"":pageName,
+                      pageName == '#' ? "" : pageName,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary,
                       ),
                     ),
                     centerTitle: true,
                     actions: [
-                      (currentPath == '/voice') /// later u will add the pages that has instructions for them here
+                      (currentPath == '/voice')
+
+                      /// later u will add the pages that has instructions for them here
                           ?
                       IconButton(
                         icon: Icon(
                           Neurovive.info,
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .onPrimary,
                           size: 30,
                         ),
                         onPressed: () {
-                          switch(currentPath){ ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
+                          switch (currentPath) {
+                          ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
                             case '/voice':
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
-                                builder: (context) => buildHelpInstructionsSheetForVoiceRecord(context),
+                                builder: (context) =>
+                                    buildHelpInstructionsSheetForVoiceRecord(
+                                        context),
                               );
                               break;
                           }
-
                         },
-                      ):const SizedBox.shrink(),
+                      ) : const SizedBox.shrink(),
                     ],
                   ),
 
@@ -101,13 +118,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/',
             name: 'NeuroVive',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
-              child: const LandScreen(),
-              transitionDuration: const Duration(milliseconds: 300),
-              reverseTransitionDuration: const Duration(milliseconds: 300),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+            pageBuilder: (context, state) =>
+                CustomTransitionPage(
+                  key: state.pageKey,
+                  child: const LandScreen(),
+                  transitionDuration: const Duration(milliseconds: 10),
+                  reverseTransitionDuration: const Duration(milliseconds: 10),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
                     return FadeTransition(
                       opacity: Tween<double>(
                         begin: 1,
@@ -116,7 +134,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                       child: child,
                     );
                   },
-            ),
+                ),
           ),
           GoRoute(
             path: '/voice',
@@ -125,12 +143,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: const RecordScreen2(),
-                transitionDuration: const Duration(milliseconds: 300),
+                transitionDuration: const Duration(milliseconds: 10),
                 // Hero duration
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
+                  return FadeTransition(opacity: animation, child: child);
+                },
               );
             },
           ),
@@ -141,12 +159,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               return CustomTransitionPage(
                 key: state.pageKey,
                 child: const HandwritingScreen(),
-                transitionDuration: const Duration(milliseconds: 300),
+                transitionDuration: const Duration(milliseconds: 10),
                 // Hero duration
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
+                  return FadeTransition(opacity: animation, child: child);
+                },
               );
             },
           ),
@@ -158,6 +176,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               return SendVoiceScreen(wavPath: path);
             },
           ),
+          GoRoute(
+              path: '/results',
+              name: 'Analysis Result',
+              builder: (context, state) {
+                final results = state.extra as VoiceResponse;
+                return  ResultScreen(result: results);
+
+              })
         ],
       ),
 

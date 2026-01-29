@@ -18,7 +18,7 @@ class Api {
 
     request.files.add(
       http.MultipartFile.fromBytes(
-        'file', // field name expected by the API
+        'voice', // field name expected by the API
         wavBytes,
         filename: path
             .split('/')
@@ -30,9 +30,9 @@ class Api {
     final streamedResponse = await request.send();
     final responseBody = await streamedResponse.stream.bytesToString();
 
-    if (streamedResponse.statusCode != 200) {
+    if (streamedResponse.statusCode != 200 && streamedResponse.statusCode != 500) {
       return VoiceResponse(
-        status: JobStatus.failed,
+        status: JobStatus.error,
       );
     }
 

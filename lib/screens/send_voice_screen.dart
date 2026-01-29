@@ -39,36 +39,34 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
             if (result == null) return;
 
             switch (result.status) {
-              case JobStatus.uploaded:
+              case JobStatus.success:
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Uploaded successfully"),duration: Duration(seconds: 2),),
+                  const SnackBar(content: Text("Analysed successfully"),duration: Duration(seconds: 2),),
                 );
-                ///todo: EID, make the /analysing_screen and the user shouldd be sent to there with the new jobId instead
-                context.go('/handwriting'); // test route
+
+                context.go('/results', extra: result);
                 break;
 
-              case JobStatus.failed:
+              case JobStatus.error:
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text(
-                      "Upload failed, please record and upload again",
+                      result.message??"Upload failed, please try again later",// if there is no result.message that means the response code isn't 500 so it is another error from the api, 500 means the error from the ai
                     ),
                     duration: Duration(seconds: 4),
                   ),
                 );
                 context.go('/voice');
                 break;
-
-              case JobStatus.done:
-              // will be handled later
-                break;
             }
           },
           error: (e, _) {
+            print(e);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  "Error occurred, try again",
+               SnackBar(
+                content: Text( //
+
+                  "Error occured, please make sure you are connected to the internet.",
                 ),
                 duration: Duration(seconds: 4),
               ),
@@ -82,7 +80,13 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
 
     return PopScope(
       canPop: false,
-    //  onPopInvokedWithResult: (didPop, _) {if (!didPop) context.go('/');}, //disabled for now so that the user cant go back while uploading, do the same while anylksis is in progress too
+    //  onPopInvokedWithResult: (didpop,_) async{
+      //         if(!didpop)
+      //           {
+      //             await handleBack(context);
+      //           }
+      //
+      //       }, //disabled for now so that the user cant go back while uploading, do the same while anylksis is in progress too
       child:  state.isLoading || state.value == null
             ? const Center(
           child: CircularLoadingIndicator(),

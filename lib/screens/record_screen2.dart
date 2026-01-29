@@ -137,7 +137,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(/// this will be removed when the landing screen is created, so the user be able to go back to it
+    return PopScope(///todo: this will be removed when the landing screen is created, so the user be able to go back to it
       canPop: false,
       child: Center(
         child: Column(

@@ -2,8 +2,36 @@
 // Helper function to build help instructions bottom sheet
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'icons/neurovive_icons.dart';
+
+//for the routing
+
+Future<bool> handleBack(BuildContext context) async { //this has the back button rules, dont forget to call it in the popscope too if u will add a page's rule
+  final location = GoRouter.of(context).state.uri.path;
+
+  if (location == '/results') {
+    context.go('/voice');
+    return false; // no pop
+  }
+
+  if (context.canPop()) {
+    context.pop();
+    return true;
+  }
+
+  //dont pop if no rules matched
+  return false;
+}
+
+
+
+
+
+
+
+//for teh instructions
 
 Widget buildHelpInstructionsSheetForVoiceRecord(BuildContext context) {
   return DraggableScrollableSheet(
