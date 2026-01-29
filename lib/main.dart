@@ -7,6 +7,7 @@ import 'package:first_project/themes/MainThemes.dart';
 import 'package:first_project/widgets/analysis_loading.dart';
 import 'package:first_project/widgets/uploading_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,75 +40,85 @@ final routerProvider = Provider<GoRouter>((ref) {
                 final String pageName = state.topRoute?.name ??
                     "Error, no name for this route";
                 final String currentPath = state.uri.path;
-                return Scaffold(
-                  backgroundColor: Theme
-                      .of(context)
-                      .scaffoldBackgroundColor,
+                return PopScope(
+                  canPop: false,
+                  onPopInvokedWithResult: (didpop,_) async{
+                    if(!didpop)
+                    {
+                      await handleBack(context);
+                    }
 
-                  appBar: AppBar(
-                    elevation: 0,
-                    leading: !(currentPath == '/' ||
-                        currentPath == '/sendvoice' || currentPath == '/voice')
+                  },
+                  child: Scaffold(
+                    backgroundColor: Theme
+                        .of(context)
+                        .scaffoldBackgroundColor,
 
-                    ///todo: remove /voice from here when you add the landing screen
-                        ? IconButton(
-                      onPressed: () {
-                       handleBack(context);
-                      },
-                      icon: Icon(Icons.arrow_back_ios_new),
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onPrimary,
-                    )
-                        : const SizedBox.shrink(),
+                    appBar: AppBar(
+                      elevation: 0,
+                      leading: !(currentPath == '/' ||
+                          currentPath == '/sendvoice' || currentPath == '/voice')
 
-                    title: Text(
-                      pageName == '#' ? "" : pageName,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
+                      ///todo: remove /voice from here when you add the landing screen
+                          ? IconButton(
+                        onPressed: () {
+                         handleBack(context);
+                        },
+                        icon: Icon(Icons.arrow_back_ios_new),
                         color: Theme
                             .of(context)
                             .colorScheme
                             .onPrimary,
-                      ),
-                    ),
-                    centerTitle: true,
-                    actions: [
-                      (currentPath == '/voice')
+                      )
+                          : const SizedBox.shrink(),
 
-                      /// later u will add the pages that has instructions for them here
-                          ?
-                      IconButton(
-                        icon: Icon(
-                          Neurovive.info,
+                      title: Text(
+                        pageName == '#' ? "" : pageName,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
                           color: Theme
                               .of(context)
                               .colorScheme
                               .onPrimary,
-                          size: 30,
                         ),
-                        onPressed: () {
-                          switch (currentPath) {
-                          ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
-                            case '/voice':
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) =>
-                                    buildHelpInstructionsSheetForVoiceRecord(
-                                        context),
-                              );
-                              break;
-                          }
-                        },
-                      ) : const SizedBox.shrink(),
-                    ],
-                  ),
+                      ),
+                      centerTitle: true,
+                      actions: [
+                        (currentPath == '/voice')
 
-                  body: child,
+                        /// later u will add the pages that has instructions for them here
+                            ?
+                        IconButton(
+                          icon: Icon(
+                            Neurovive.info,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .onPrimary,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            switch (currentPath) {
+                            ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
+                              case '/voice':
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) =>
+                                      buildHelpInstructionsSheetForVoiceRecord(
+                                          context),
+                                );
+                                break;
+                            }
+                          },
+                        ) : const SizedBox.shrink(),
+                      ],
+                    ),
+
+                    body: child,
+                  ),
                 );
               },
             ),
@@ -193,7 +204,13 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    // DeviceOrientation.portraitDown, // include this if you want upside-down allowed
+  ]);
   runApp(const ProviderScope(child: MyApp()));
 }
 

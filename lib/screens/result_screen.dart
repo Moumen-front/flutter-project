@@ -10,23 +10,13 @@ class ResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didpop,_) async{
-        if(!didpop)
-          {
-            await handleBack(context);
-          }
-
-      },
-      child: Center(
-        child: Text(
-          result.toString(),
-          style: const TextStyle(
-            fontSize: 30,
-            color: Colors.lightGreen,
-            fontWeight: FontWeight.bold,
-          ),
+    return Center(
+      child: Text(
+        result.toString(),
+        style: const TextStyle(
+          fontSize: 30,
+          color: Colors.lightGreen,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

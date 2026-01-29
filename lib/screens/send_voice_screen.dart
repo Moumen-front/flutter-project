@@ -78,20 +78,10 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
     );
 
 
-    return PopScope(
-      canPop: false,
-    //  onPopInvokedWithResult: (didpop,_) async{
-      //         if(!didpop)
-      //           {
-      //             await handleBack(context);
-      //           }
-      //
-      //       }, //disabled for now so that the user cant go back while uploading, do the same while anylksis is in progress too
-      child:  state.isLoading || state.value == null
-            ? const Center(
-          child: CircularLoadingIndicator(),
-        )
-            : const SizedBox.shrink(),
-    );
+    return state.isLoading || state.value == null
+          ? const Center(
+        child: CircularLoadingIndicator(),
+      )
+          : const SizedBox.shrink();
   }
 }

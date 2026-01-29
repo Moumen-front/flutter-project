@@ -1,5 +1,7 @@
 
 // Helper function to build help instructions bottom sheet
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +17,12 @@ Future<bool> handleBack(BuildContext context) async { //this has the back button
     context.go('/voice');
     return false; // no pop
   }
+
+  if(location == '/voice')///todo: change this to landscreen when it is added
+    {
+      exit(0);
+      return false;
+    }
 
   if (context.canPop()) {
     context.pop();
