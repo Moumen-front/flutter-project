@@ -12,12 +12,14 @@ class AudioRecorderService {
   String _filePath = "";
   final _amplitudeController = StreamController<double>.broadcast();
 
-  ///the time where the record has started
+  ///the time when the record has started
   int _startTime = 0;
 ///all the time spent during pauseing
   int _accumalaitedPauseTime = 0;
-/// the time where the pause started
+/// the time when the pause started
   int _pauseStartTime = 0;
+  ///time when last pause/resume
+  int _lastInteractTime = 0;
   /// Stream of normalized amplitude (-40 to 0 mapped to 0.0 to 1.0)
   Stream<double> get amplitudeStream => _amplitudeController.stream;
 
@@ -25,6 +27,12 @@ class AudioRecorderService {
   {
    return ((DateTime.now().millisecondsSinceEpoch - _startTime - _accumalaitedPauseTime)/1000).toInt();
   }
+
+  int _getDurationMilliSeconds()
+  {
+    return (DateTime.now().millisecondsSinceEpoch - _startTime - _accumalaitedPauseTime);
+  }
+
 
   /// Start recording
   Future<void> startRecording() async {
@@ -80,21 +88,38 @@ class AudioRecorderService {
   }
 
   /// Pause recording
-  Future<void> pauseRecording() async {
+  Future<bool> pauseRecording() async {
 
-    if (await _record.isRecording() && !await _record.isPaused()) {
+    if (await _record.isRecording() && !await _record.isPaused()) { // the second condition here is for disabling the toggling half second befor ethe half time so that it works well when we pause
+
+      if(DateTime.now().millisecondsSinceEpoch - _lastInteractTime <= 1500 || (_getDurationMilliSeconds()<3000 && _getDurationMilliSeconds()>=1500 ) ) ///todo: refactor this as it is repeated in the resume function too
+        {
+          return false;
+        }
       await _record.pause();
       _pauseStartTime = DateTime.now().millisecondsSinceEpoch;
+      _lastInteractTime = DateTime.now().millisecondsSinceEpoch;
+      return true;
     }
+    return false;
   }
 
   /// Resume recording
-  Future<void> resumeRecording() async {
+  Future<bool> resumeRecording() async {
     if (await _record.isRecording() && await _record.isPaused()) {
-      await _record.resume();
-      _accumalaitedPauseTime +=   DateTime.now().millisecondsSinceEpoch - _pauseStartTime;
 
+      if(DateTime.now().millisecondsSinceEpoch - _lastInteractTime <= 1500)
+      {
+
+        return false;
+      }
+
+      await _record.resume();
+      _accumalaitedPauseTime +=   (DateTime.now().millisecondsSinceEpoch - _pauseStartTime);
+      _lastInteractTime = DateTime.now().millisecondsSinceEpoch;
+      return true;
     }
+    return false;
   }
 
   Future<bool> isRecording() => _record.isRecording();

@@ -25,7 +25,8 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   bool isFirstPhase = true;
 
   ///max seconds for each phase
-  int MaxSeconds= 3;
+  int MaxSeconds = 3;
+
   ///changes from 3 to 6 when the user finishes recording the first letter
   int currentMaxSeconds = 3;
   int seconds = 0;
@@ -49,8 +50,6 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
           stopRecording();
         }
       }
-
-
     });
   }
 
@@ -59,17 +58,24 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       startRecording();
       return;
     }
+
+    if (!isPaused) {
+      if (!await recorder.pauseRecording()) {
+        return;
+      }
+        stopTimer();
+
+    } else {
+
+      if (! await recorder.resumeRecording()){
+        return;
+      }
+      startTimer();
+    }
+
     setState(() {
       isPaused = !isPaused;
     });
-
-    if (isPaused) {
-      stopTimer();
-      await recorder.pauseRecording();
-    } else {
-      startTimer();
-      await recorder.resumeRecording();
-    }
   }
 
   void stopRecording() async {
@@ -111,8 +117,6 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   Future<void> startRecording() async {
     if (isRecording) return;
 
-
-
     try {
       await recorder.startRecording();
     } catch (e) {
@@ -153,13 +157,10 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didpop,_) async{
-        if(!didpop)
-        {
-
+      onPopInvokedWithResult: (didpop, _) async {
+        if (!didpop) {
           await handleBack(context);
         }
-
       },
       child: Center(
         child: Column(
@@ -227,7 +228,6 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                       ),
                     if (isRecording || doneRecording)
                       Positioned(
-
                         left: MediaQuery.of(context).size.width * 0.1,
                         child: Container(
                           //cancel
@@ -270,7 +270,6 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
                         ),
                         child: IconButton(
                           icon: Icon(
-
                             (isPaused || doneRecording || !isRecording)
                                 ? Icons.play_arrow_rounded
                                 : Icons.pause,
