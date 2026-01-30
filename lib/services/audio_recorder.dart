@@ -91,7 +91,7 @@ class AudioRecorderService {
   Future<bool> pauseRecording() async {
 
     if (await _record.isRecording() && !await _record.isPaused()) { // the second condition here is for disabling the toggling half second befor ethe half time so that it works well when we pause
-
+      ///todo: BUG, if there were a bug regarding pausing/resuming the recording, remember to changet eh cooldown duration here and in the resume function if the max time was changed
       if(DateTime.now().millisecondsSinceEpoch - _lastInteractTime <= 1500 || (_getDurationMilliSeconds()<3000 && _getDurationMilliSeconds()>=1500 ) ) ///todo: refactor this as it is repeated in the resume function too
         {
           return false;
