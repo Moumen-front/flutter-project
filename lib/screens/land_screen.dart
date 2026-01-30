@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../utils.dart';
 import '../widgets/analysis_loading.dart';
 import '../widgets/animated_text_button.dart';
 import '../widgets/uploading_loading.dart';
@@ -11,43 +12,54 @@ class LandScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Placeholder(),
-          ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didpop,_) async{
+        if(!didpop)
+        {
 
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                AnimatedTextButton(
-                  normalColor: Theme.of(context).colorScheme.onSecondary,
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onPressed: () {
-                    context.push('/voice');
-                  },
-                  text: "Voice",
-                ),
-                AnimatedTextButton(
-                  normalColor: Theme.of(context).colorScheme.onSecondary,
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  onPressed: () {
-                    context.push('/handwriting');
-                  },
-                  text: "hand writing",
-                ),
+          await handleBack(context);
+        }
 
-
-              ],
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Placeholder(),
             ),
-          ),
-        ],
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  AnimatedTextButton(
+                    normalColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    onPressed: () {
+                      context.push('/voice');
+                    },
+                    text: "Voice",
+                  ),
+                  AnimatedTextButton(
+                    normalColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    onPressed: () {
+                      context.push('/handwriting');
+                    },
+                    text: "hand writing",
+                  ),
+
+
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

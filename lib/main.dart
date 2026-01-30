@@ -58,19 +58,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             onPopInvokedWithResult: (didpop,_) async{
               if(!didpop)
               {
-                final location = state.uri.path;
-                String routeName = state.topRoute?.path ?? '';
-                final String pageName =state.topRoute?.name ??
-                    "Error, no name for this route";
-                final String currentPath = state.uri.path
-                    .split('?')
-                    .first;
-
-
-                print("location from main: $location");
-                print("routeName from main: $routeName");
-                print("pageName from main: $pageName");
-                print("currentPath from main: $currentPath");
+                //final location = state.uri.path;
+              //  String routeName = state.topRoute?.path ?? '';
+              //  final String pageName =state.topRoute?.name ??
+              //      "Error, no name for this route";
+              //  final String currentPath = state.uri.path
+              //      .split('?')
+              //      .first;
+//
+//
+              //  print("location from main: $location");
+              //  print("routeName from main: $routeName");
+              //  print("pageName from main: $pageName");
+              //  print("currentPath from main: $currentPath");
 
                 await handleBack(context);
               }

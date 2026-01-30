@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../notifiers/voice_upload_notifier.dart';
+import '../utils.dart';
 import '../widgets/uploading_loading.dart';
 
 class SendVoiceScreen extends ConsumerStatefulWidget {
@@ -79,9 +80,20 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
 
 
     return state.isLoading || state.value == null
-          ? const Center(
-        child: CircularLoadingIndicator(),
-      )
+          ? PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didpop,_) async{
+        if(!didpop)
+        {
+
+          await handleBack(context);
+        }
+
+      },
+            child: const Center(
+                    child: CircularLoadingIndicator(),
+                  ),
+          )
           : const SizedBox.shrink();
   }
 }

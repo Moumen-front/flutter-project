@@ -153,11 +153,14 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-        onPopInvokedWithResult: (didpop,_)  {
-        print('pop from record screen got invoked');
+      onPopInvokedWithResult: (didpop,_) async{
+        if(!didpop)
+        {
 
-        },
+          await handleBack(context);
+        }
 
+      },
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
