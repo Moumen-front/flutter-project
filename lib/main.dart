@@ -27,19 +27,37 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (context, state, child) {
           String routeName = state.topRoute?.path ?? '';
+          final String pageName = state.topRoute?.name ??
+              "Error, no name for this route";
+          final String currentPath = state.uri.path
+              .split('?')
+              .first;
+
 
           ThemeData theme = switch (routeName) {
             '/voice' => Mainthemes.greenBackgroundTheme,
             _ => Mainthemes.whiteBackgroundTheme,
           };
 
+          ref.listen<AsyncValue<bool>>(
+            showHelpOnceProvider(currentPath),
+                (_, next) {
+              next.whenOrNull(
+                data: (shouldShow) {
+                  if (!shouldShow) return;
+
+                  showCurrentInstructions(context, currentPath);
+                },
+              );
+            },
+          );
+
+
           return Theme(
             data: theme,
             child: Builder(
               builder: (context) {
-                final String pageName = state.topRoute?.name ??
-                    "Error, no name for this route";
-                final String currentPath = state.uri.path;
+
                 return PopScope(
                   canPop: false,
                   onPopInvokedWithResult: (didpop,_) async{
@@ -99,19 +117,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                             size: 30,
                           ),
                           onPressed: () {
-                            switch (currentPath) {
-                            ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
-                              case '/voice':
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) =>
-                                      buildHelpInstructionsSheetForVoiceRecord(
-                                          context),
-                                );
-                                break;
-                            }
+                            showCurrentInstructions(context, currentPath);
                           },
                         ) : const SizedBox.shrink(),
                       ],

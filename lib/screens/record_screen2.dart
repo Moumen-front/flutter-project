@@ -36,11 +36,11 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   final AudioRecorderService recorder = AudioRecorderService();
 
   void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {
-        seconds++;
+        seconds = recorder.getDuration();
       });
-      if (seconds >= currentMaxSeconds && isRecording) {
+      if (seconds >= currentMaxSeconds && isRecording && !isPaused) {
         if (isFirstPhase) {
           toggleRecording();
           isFirstPhase = false;
@@ -49,6 +49,8 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
           stopRecording();
         }
       }
+
+
     });
   }
 
@@ -106,22 +108,33 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
     });
   }
 
-  void startRecording() async {
-    if (isRecording) {
+  Future<void> startRecording() async {
+    if (isRecording) return;
+
+
+
+    try {
+      await recorder.startRecording();
+    } catch (e) {
+      print(e);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to start recording, permission needed'),
+        ),
+      );
       return;
     }
+
     setState(() {
       isRecording = true;
       currentMaxSeconds = MaxSeconds;
       isFirstPhase = true;
       isPaused = false;
+      seconds = 0;
     });
 
-    if (isRecording) {
-      seconds = 0;
-      startTimer();
-      await recorder.startRecording();
-    }
+    startTimer();
   }
 
   void submitVoice() {

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:record/record.dart';
 import 'package:record/record.dart' as rec;
 
 class AudioRecorderService {
@@ -11,8 +12,19 @@ class AudioRecorderService {
   String _filePath = "";
   final _amplitudeController = StreamController<double>.broadcast();
 
-  /// Stream of normalized amplitude (-40 to 0 mapped to 0.0 - 1.0)
+  ///the time where the record has started
+  int _startTime = 0;
+///all the time spent during pauseing
+  int _accumalaitedPauseTime = 0;
+/// the time where the pause started
+  int _pauseStartTime = 0;
+  /// Stream of normalized amplitude (-40 to 0 mapped to 0.0 to 1.0)
   Stream<double> get amplitudeStream => _amplitudeController.stream;
+
+  int getDuration()
+  {
+   return ((DateTime.now().millisecondsSinceEpoch - _startTime - _accumalaitedPauseTime)/1000).toInt();
+  }
 
   /// Start recording
   Future<void> startRecording() async {
@@ -21,18 +33,27 @@ class AudioRecorderService {
       throw Exception("Microphone permission not granted");
     }
 
-    final directory = await getApplicationDocumentsDirectory();
-    final fileName = "record_${DateTime.now().millisecondsSinceEpoch}.wav";
-    _filePath = "${directory.path}/$fileName";
+    if (!kIsWeb) {
+      final directory = await getApplicationDocumentsDirectory();
+      final fileName = "record_${DateTime
+          .now()
+          .millisecondsSinceEpoch}.wav";
+      _filePath = "${directory.path}/$fileName";
+    }
+    else{
+      _filePath = "ignoredname"; // the path parameter is ignored on web
 
+      final directory = await getApplicationDocumentsDirectory(); // to make it crash so the recording don't work , as for now i cant get to make it work smoothly on web, it be so laggy
+    }
     await _record.start(
       const rec.RecordConfig(
         encoder: rec.AudioEncoder.wav,
-        bitRate: 128000,
-        sampleRate: 44100,
+          bitRate: 128000,
+          sampleRate: 44100,
       ),
       path: _filePath,
     );
+    _startTime = DateTime.now().millisecondsSinceEpoch;
     // periodically check amplitude
     Timer.periodic(const Duration(milliseconds: 100), (timer) async {
       if (await _record.isRecording()) {
@@ -52,20 +73,27 @@ class AudioRecorderService {
       await _record.stop();
     }
     _amplitudeController.add(0.0); // reset
+
+    _accumalaitedPauseTime = 0;
+
     return _filePath;
   }
 
   /// Pause recording
   Future<void> pauseRecording() async {
-    if (await _record.isRecording()) {
+
+    if (await _record.isRecording() && !await _record.isPaused()) {
       await _record.pause();
+      _pauseStartTime = DateTime.now().millisecondsSinceEpoch;
     }
   }
 
   /// Resume recording
   Future<void> resumeRecording() async {
-    if (await _record.isPaused()) {
+    if (await _record.isRecording() && await _record.isPaused()) {
       await _record.resume();
+      _accumalaitedPauseTime +=   DateTime.now().millisecondsSinceEpoch - _pauseStartTime;
+
     }
   }
 
@@ -73,6 +101,7 @@ class AudioRecorderService {
   Future<bool> isPaused() => _record.isPaused();
 
   void dispose() {
+    ///todo: rememerb to cancel all the timer when disposing i think
     _amplitudeController.close();
   }
 

@@ -4,9 +4,17 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'icons/neurovive_icons.dart';
+
+
+
+
+
+
 
 //for the routing
 
@@ -39,9 +47,52 @@ Future<bool> handleBack(BuildContext context) async { //this has the back button
 
 
 
-//for teh instructions
+//for the instructions
 
-Widget buildHelpInstructionsSheetForVoiceRecord(BuildContext context) {
+void showCurrentInstructions(BuildContext context,String currentPath)
+{
+  switch (currentPath) {
+  ///later we will add the instructions for the other pages here, but the function itself will be in utils.dart
+    case '/voice':
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) =>
+            _buildHelpInstructionsSheetForVoiceRecord(
+                context),
+      );
+      break;
+  }
+
+}
+
+
+
+
+
+
+
+
+final showHelpOnceProvider =
+FutureProvider.family<bool, String>((ref, key) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final storageKey = 'help_shown_$key';
+
+  final shown = prefs.getBool(storageKey) ?? false;
+
+  if (!shown) {
+    await prefs.setBool(storageKey, true);
+    return true; // show help
+  }
+
+  return false; // don't show
+});
+
+
+
+Widget _buildHelpInstructionsSheetForVoiceRecord(BuildContext context) {
   return DraggableScrollableSheet(
     initialChildSize: 0.75,
     minChildSize: 0.5,
