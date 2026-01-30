@@ -53,35 +53,35 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
 
 
-          return Theme(
-            data: theme,
-            child: Builder(
-              builder: (context) {
-
-                return PopScope(
-                  canPop: false,
-                  onPopInvokedWithResult: (didpop,_) async{
-                    if(!didpop)
-                    {
-                      final location = state.uri.path;
-                      String routeName = state.topRoute?.path ?? '';
-                      final String pageName =state.topRoute?.name ??
-                          "Error, no name for this route";
-                      final String currentPath = state.uri.path
-                          .split('?')
-                          .first;
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didpop,_) async{
+              if(!didpop)
+              {
+                final location = state.uri.path;
+                String routeName = state.topRoute?.path ?? '';
+                final String pageName =state.topRoute?.name ??
+                    "Error, no name for this route";
+                final String currentPath = state.uri.path
+                    .split('?')
+                    .first;
 
 
-                      print("location from main: $location");
-                      print("routeName from main: $routeName");
-                      print("pageName from main: $pageName");
-                      print("currentPath from main: $currentPath");
+                print("location from main: $location");
+                print("routeName from main: $routeName");
+                print("pageName from main: $pageName");
+                print("currentPath from main: $currentPath");
 
-                      await handleBack(context);
-                    }
+                await handleBack(context);
+              }
 
-                  },
-                  child: Scaffold(
+            },
+            child: Theme(
+              data: theme,
+              child: Builder(
+                builder: (context) {
+
+                  return Scaffold(
                     backgroundColor: Theme
                         .of(context)
                         .scaffoldBackgroundColor,
@@ -138,9 +138,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                     ),
 
                     body: child,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           );
         },
@@ -239,6 +239,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("logging works well");
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: ref.watch(routerProvider),
