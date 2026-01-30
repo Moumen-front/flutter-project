@@ -20,6 +20,18 @@ import 'icons/neurovive_icons.dart';
 
 Future<bool> handleBack(BuildContext context) async { //this has the back button rules, dont forget to call it in the popscope too if u will add a page's rule
   final location = GoRouter.of(context).state.uri.path;
+  String routeName = GoRouter.of(context).state.topRoute?.path ?? '';
+  final String pageName = GoRouter.of(context).state.topRoute?.name ??
+      "Error, no name for this route";
+  final String currentPath = GoRouter.of(context).state.uri.path
+      .split('?')
+      .first;
+
+
+  print("location: $location");
+  print("routeName: $routeName");
+  print("pageName: $pageName");
+  print("currentPath: $currentPath");
 
   if (location == '/results') {
     context.go('/voice');
