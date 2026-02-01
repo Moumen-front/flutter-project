@@ -2,6 +2,7 @@
 // Helper function to build help instructions bottom sheet
 import 'dart:io';
 
+import 'package:NeuroVive/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,9 +124,9 @@ Widget _buildHelpInstructionsSheetForVoiceRecord(BuildContext context) {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
-                    '     Voice Test Instructions',
-                    style: TextStyle(
+                  Text(
+                    '     '+AppLocalizations.of(context)!.voiceHelpTitle,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFFB22222),
@@ -141,43 +142,43 @@ Widget _buildHelpInstructionsSheetForVoiceRecord(BuildContext context) {
                 controller: scrollController,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  _buildSectionTitle('1. Prepare Your Environment'),
+                  _buildSectionTitle(AppLocalizations.of(context)!.voiceHelpFirstMain),
                   const SizedBox(height: 8),
                   _buildBulletPoint(
-                    'Find a Quiet Space:',
-                    'Choose a room with no background noise or distractions.',
+                    AppLocalizations.of(context)!.voiceHelpFirstMainFirstSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpFirstMainFirstSubDesc,
                   ),
                   _buildBulletPoint(
-                    'Position Your Phone:',
-                    'Hold the device approximately 20 cm (8 inches) from your mouth.',
+                    AppLocalizations.of(context)!.voiceHelpFirstMainSecondSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpFirstMainSecondSubDesc,
                   ),
                   const SizedBox(height: 16),
                   _buildDashedDivider(),
                   const SizedBox(height: 16),
 
-                  _buildSectionTitle('2. Perform the Test'),
+                  _buildSectionTitle(AppLocalizations.of(context)!.voiceHelpSecondMainTitle),
                   const SizedBox(height: 8),
                   _buildBulletPoint(
-                    'Step 1:',
-                    'Sustained "AAA" Take a deep breath and make a steady "AAA" sound (as in "apple") for 3 seconds.',
+                    AppLocalizations.of(context)!.voiceHelpSecondMainFirstSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpSecondMainFirstSubDesc,
                   ),
                   _buildBulletPoint(
-                    'Step 2:',
-                    'Sustained "OOO" The app will transition automatically. Make a steady "OOO" sound (as in "boot") for another 3 seconds.',
+                    AppLocalizations.of(context)!.voiceHelpSecondMainSecondSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpSecondMainSecondSubDesc,
                   ),
                   const SizedBox(height: 16),
                   _buildDashedDivider(),
                   const SizedBox(height: 16),
 
-                  _buildSectionTitle('3. Important Tips for Accuracy'),
+                  _buildSectionTitle(AppLocalizations.of(context)!.voiceHelpThirdMain),
                   const SizedBox(height: 8),
                   _buildBulletPoint(
-                    'Be Natural:',
-                    'Use your normal speaking volume and pitch. Do not try to "fix" your voice; the AI needs to hear your natural tone to provide an objective truth.',
+                    AppLocalizations.of(context)!.voiceHelpThirdMainFirstSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpThirdMainFirstSubDesc,
                   ),
                   _buildBulletPoint(
-                    'Don\'t Worry About Tremors:',
-                    'If your voice shakes or breaks, do not restart. These subtle changes are exactly what the AI uses to quantify your symptoms accurately.',
+                    AppLocalizations.of(context)!.voiceHelpThirdMainSecondSubTitle,
+                    AppLocalizations.of(context)!.voiceHelpThirdMainSecondSubDesc,
                   ),
                   const SizedBox(height: 30),
                 ],

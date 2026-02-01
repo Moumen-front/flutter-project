@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:first_project/icons/neurovive_icons.dart';
-import 'package:first_project/widgets/utils.dart';
+import 'package:NeuroVive/widgets/utils.dart';
 import 'package:flutter/material.dart';
+
+import '../icons/neurovive_icons.dart';
 
 class MicButton extends StatefulWidget {
   final Stream<double> amplitudeStream;

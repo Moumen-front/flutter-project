@@ -1,0 +1,29 @@
+{
+  "voiceHelpTitle": "Voice Test Instructions",
+  "voiceHelpFirstMain": "1. Prepare Your Environment",
+  "voiceHelpFirstMainFirstSubTitle": "Find a Quiet Space:",
+  "voiceHelpFirstMainFirstSubDesc": "Choose a room with no background noise or distractions.",
+  "voiceHelpFirstMainSecondSubTitle": "Position Your Phone:",
+  "voiceHelpFirstMainSecondSubDesc": "Hold the device approximately 20 cm (8 inches) from your mouth.",
+  "voiceHelpSecondMainTitle": "2. Perform the Test",
+  "voiceHelpSecondMainFirstSubTitle": "Step 1:",
+  "voiceHelpSecondMainFirstSubDesc": "Sustained \"AAA\", Take a deep breath and make a steady \"AAA\" sound (as in \"apple\") for 3 seconds.",
+  "voiceHelpSecondMainSecondSubTitle": "Step 2:",
+  "voiceHelpSecondMainSecondSubDesc": "Sustained \"OOO\", The app will transition automatically. Make a steady \"OOO\" sound (as in \"boot\") for another 3 seconds.",
+  "voiceHelpThirdMain": "3. Important Tips for Accuracy",
+  "voiceHelpThirdMainFirstSubTitle": "Be Natural:",
+  "voiceHelpThirdMainFirstSubDesc": "Use your normal speaking volume and pitch. Do not try to \"fix\" your voice; the AI needs to hear your natural tone to provide an objective truth.",
+  "voiceHelpThirdMainSecondSubTitle": "Don't Worry About Tremors:",
+  "voiceHelpThirdMainSecondSubDesc": "If your voice shakes or breaks, do not restart. These subtle changes are exactly what the AI uses to quantify your symptoms accurately.",
+"noNameError": "Error, no name for this route",
+  "uploadingLoading": "Uploading",
+  "analyezedSuccessfully": "Analysed successfully",
+  "uploadFailed": "Upload failed, please try again later",
+  "errorOccured": "Error occured, please make sure you are connected to the internet.",
+  "failedRecording":"Failed to start recording, permission needed",
+  "recordOrder": "Say the Pronounce",
+  "toneA" : "“AAA”",
+  "toneO" : "“OOO”"
+
+
+}

@@ -1,19 +1,19 @@
-import 'package:first_project/icons/neurovive_icons.dart';
-import 'package:first_project/notifiers/voice_upload_notifier.dart';
-import 'package:first_project/screens/land_screen.dart';
-import 'package:first_project/screens/result_screen.dart';
-import 'package:first_project/screens/send_voice_screen.dart';
-import 'package:first_project/themes/MainThemes.dart';
-import 'package:first_project/widgets/analysis_loading.dart';
-import 'package:first_project/widgets/uploading_loading.dart';
+import 'package:NeuroVive/screens/land_screen.dart';
+import 'package:NeuroVive/screens/result_screen.dart';
+import 'package:NeuroVive/screens/send_voice_screen.dart';
+import 'package:NeuroVive/themes/MainThemes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 
 import './utils.dart';
 import './screens/handwriting_screen.dart';
 import './screens/record_screen2.dart';
+import 'icons/neurovive_icons.dart';
+import 'l10n/app_localizations.dart';
+import 'notifiers/voice_upload_notifier.dart';
 
 //router provider
 final routerProvider = Provider<GoRouter>((ref) {
@@ -27,8 +27,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (context, state, child) {
           String routeName = state.topRoute?.path ?? '';
-          final String pageName = state.topRoute?.name ??
-              "Error, no name for this route";
+          final String pageName = state.topRoute?.name ?? ///todo: EID, add a switch statement here to make the names of the pages use the localization
+              AppLocalizations.of(context)!.noNameError;
           final String currentPath = state.uri.path
               .split('?')
               .first;
@@ -211,6 +211,13 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
+
+//language provider
+final localProvider = StateProvider<Locale>((ref) {
+  return const Locale('en');
+});
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -226,9 +233,13 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: ref.watch(routerProvider),
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

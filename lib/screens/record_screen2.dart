@@ -1,10 +1,10 @@
 import 'dart:async';
-
-import 'package:first_project/icons/neurovive_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../icons/neurovive_icons.dart';
+import '../l10n/app_localizations.dart';
 import '../services/audio_recorder.dart';
 import '../utils.dart';
 import '../widgets/mic_button.dart';
@@ -123,8 +123,8 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       print(e);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to start recording, permission needed'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.failedRecording),
         ),
       );
       return;
@@ -191,7 +191,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
             ),
             SizedBox(height: 20),
             Text(
-              "Say the Pronounce",
+              AppLocalizations.of(context)!.recordOrder,
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -200,7 +200,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
             ),
             SizedBox(height: 20),
             Text(
-              isFirstPhase ? '“AAA”' : '“OOO”',
+              isFirstPhase ? AppLocalizations.of(context)!.toneA : AppLocalizations.of(context)!.toneO,
               style: const TextStyle(
                 fontSize: 60,
                 fontWeight: FontWeight.bold,

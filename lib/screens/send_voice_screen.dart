@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../l10n/app_localizations.dart';
 import '../notifiers/voice_upload_notifier.dart';
 import '../utils.dart';
 import '../widgets/uploading_loading.dart';
@@ -42,7 +43,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
             switch (result.status) {
               case JobStatus.success:
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Analysed successfully"),duration: Duration(seconds: 2),),
+                  SnackBar(content: Text(AppLocalizations.of(context)!.analyezedSuccessfully),duration: const Duration(seconds: 2),),
                 );
 
                 context.go('/results', extra: result);
@@ -51,8 +52,8 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
               case JobStatus.error:
                 ScaffoldMessenger.of(context).showSnackBar(
                    SnackBar(
-                    content: Text(
-                      result.message??"Upload failed, please try again later",// if there is no result.message that means the response code isn't 500 so it is another error from the api, 500 means the error from the ai
+                    content: Text(///todo: mkae the api send and receive the language of the user so that the message be in the correct language
+                      result.message??AppLocalizations.of(context)!.uploadFailed,// if there is no result.message that means the response code isn't 500 so it is another error from the api, 500 means the error from the ai
                     ),
                     duration: Duration(seconds: 4),
                   ),
@@ -67,7 +68,7 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
                SnackBar(
                 content: Text( //
 
-                  "Error occured, please make sure you are connected to the internet.",
+                  AppLocalizations.of(context)!.errorOccured,
                 ),
                 duration: Duration(seconds: 4),
               ),
@@ -90,8 +91,8 @@ class _SendVoiceScreenState extends ConsumerState<SendVoiceScreen> {
         }
 
       },
-            child: const Center(
-                    child: CircularLoadingIndicator(),
+            child:  Center(
+                    child: CircularLoadingIndicator(text: AppLocalizations.of(context)!.uploadingLoading,),
                   ),
           )
           : const SizedBox.shrink();

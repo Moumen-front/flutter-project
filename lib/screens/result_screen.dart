@@ -1,8 +1,9 @@
-import 'package:first_project/notifiers/voice_upload_notifier.dart';
-import 'package:first_project/utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+
+import '../notifiers/voice_upload_notifier.dart';
+import '../utils.dart';
 
 class ResultScreen extends ConsumerWidget {
   final VoiceResponse result;

@@ -15,7 +15,7 @@ class CircularLoadingIndicator extends StatefulWidget {
 
   final Color color;
 
-  final String text;
+  final  String text;
   final TextStyle? textStyle;
 
   final Duration flickerSpeed;
@@ -29,7 +29,7 @@ class CircularLoadingIndicator extends StatefulWidget {
     this.strokeLength = 20,
     this.segmentCount = 120,
     this.color = Colors.teal,
-    this.text = 'Uploading',
+    required this.text ,
     this.textStyle,
     this.flickerSpeed = const Duration(milliseconds: 450),
     this.dotsSpeed = const Duration(milliseconds: 1480),
