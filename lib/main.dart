@@ -1,7 +1,7 @@
-import 'package:NeuroVive/screens/land_screen.dart';
-import 'package:NeuroVive/screens/result_screen.dart';
-import 'package:NeuroVive/screens/send_voice_screen.dart';
-import 'package:NeuroVive/themes/MainThemes.dart';
+import 'package:neurovive/screens/land_screen.dart';
+import 'package:neurovive/screens/result_screen.dart';
+import 'package:neurovive/screens/send_voice_screen.dart';
+import 'package:neurovive/themes/main_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

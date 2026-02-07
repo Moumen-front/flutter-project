@@ -69,7 +69,7 @@ class _CircularLoadingIndicatorState extends State<CircularLoadingIndicator>
         children: [
           AnimatedBuilder(
             animation: _controller,
-            builder: (_, __) {
+            builder: (_, _) {
               return CustomPaint(
                 size: Size(widget.size, widget.size),
                 painter: _SegmentedCirclePainter(
@@ -126,7 +126,7 @@ class _SegmentedCirclePainter extends CustomPainter {
           (2 * pi / segmentCount) * i + (2 * pi * progress);
       final opacity = i / segmentCount;
 
-      paint.color = color.withOpacity(opacity);
+      paint.color = color.withValues(alpha:  opacity);
 
       final startRadius = radius - strokeLength;
 

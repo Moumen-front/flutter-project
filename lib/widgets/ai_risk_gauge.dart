@@ -14,7 +14,7 @@ class GaugeWithCenterWidget extends StatelessWidget {
   final double strokeWidth;
 
   const GaugeWithCenterWidget({
-    Key? key,
+    super.key,
     required this.width,
     required this.height,
     required this.progress,
@@ -22,7 +22,7 @@ class GaugeWithCenterWidget extends StatelessWidget {
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.progressColor = Colors.green,
     this.strokeWidth = 10.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

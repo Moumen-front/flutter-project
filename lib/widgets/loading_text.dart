@@ -56,7 +56,7 @@ class _AnimatedLoadingTextState extends State<AnimatedLoadingText>
         _flickerController,
         _dotsController,
       ]),
-      builder: (_, __) {
+      builder: (_, _) {
         // Discrete dots: 1 → maxDots
         final dots =
             (_dotsController.value * (widget.maxDots+1)).floor() ;

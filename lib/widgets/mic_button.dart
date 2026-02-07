@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:NeuroVive/widgets/utils.dart';
+import 'package:neurovive/widgets/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../icons/neurovive_icons.dart';
@@ -87,7 +87,7 @@ class _MicButtonState extends State<MicButton>
                           93,
                           245,
                           225,
-                        ).withOpacity(0.3 / i),
+                        ).withValues(alpha: (0.3 / i)),
                       ),
                     ),
                 // base mic icon

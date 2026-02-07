@@ -54,12 +54,15 @@ class _AnimatedTextButtonState extends State<AnimatedTextButton> {
     final ButtonStyle style = defaultStyle.copyWith(
       foregroundColor: WidgetStateProperty.resolveWith<Color?>(
             (states) {
-          if (states.contains(WidgetState.disabled))
+          if (states.contains(WidgetState.disabled)) {
             return widget.disabledColor ?? Colors.black26;
-          if (states.contains(WidgetState.hovered))
+          }
+          if (states.contains(WidgetState.hovered)) {
             return widget.hoverColor ?? widget.normalColor;
-          if (states.contains(WidgetState.pressed))
+          }
+          if (states.contains(WidgetState.pressed)) {
             return widget.pressedColor ?? widget.normalColor;
+          }
           return widget.normalColor;
         },
       ),

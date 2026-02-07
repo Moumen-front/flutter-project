@@ -26,7 +26,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
   bool isFirstPhase = true;
 
   ///max seconds for each phase
-  int MaxSeconds = 3;
+  int maxSeconds = 3;
 
   ///changes from 3 to 6 when the user finishes recording the first letter
   int currentMaxSeconds = 3;
@@ -46,7 +46,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
         if (isFirstPhase) {
           toggleRecording();
           isFirstPhase = false;
-          currentMaxSeconds += MaxSeconds;
+          currentMaxSeconds += maxSeconds;
         } else {
           stopRecording();
         }
@@ -110,7 +110,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
       isPaused = false;
       seconds = 0;
       doneRecording = false;
-      currentMaxSeconds = MaxSeconds;
+      currentMaxSeconds = maxSeconds;
       isFirstPhase = true;
     });
   }
@@ -126,7 +126,9 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
     try {
       await recorder.startRecording();
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -138,7 +140,7 @@ class _RecordScreen2State extends ConsumerState<RecordScreen2> {
 
     setState(() {
       isRecording = true;
-      currentMaxSeconds = MaxSeconds;
+      currentMaxSeconds = maxSeconds;
       isFirstPhase = true;
       isPaused = false;
       seconds = 0;

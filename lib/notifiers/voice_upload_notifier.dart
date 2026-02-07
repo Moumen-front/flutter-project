@@ -28,14 +28,12 @@ class VoiceResponse {
         return "the results are \r\n "
             "Prediction: $prediction \r\n"
             "Confidence: $confidence \r\n";
-        break;
       case JobStatus
           .error: // this will not occuire since we will go back to the send voice screen instead of here
         return "error happened \r\n "
             "Error: $message \r\n";
-        break;
+
     }
-    return "impossible error";
   }
 
   factory VoiceResponse.fromJson(Map<String, dynamic> json) {
@@ -45,8 +43,8 @@ class VoiceResponse {
         'error' => JobStatus.error,
         _ => JobStatus.error,
       },
-      prediction: json['prediction'] as String?,
-      confidence: (json['confidence'] as num?)?.toDouble(),
+      prediction: json['label'] as String?,
+      confidence: (json['probability'] as num?)?.toDouble(),
       message: json['message'] as String?,
     );
   }
@@ -75,23 +73,21 @@ class VoiceUploadNotifier extends AsyncNotifier<VoiceResponse?> {
           confidence: 0.82,
         );
       }
-      final parsedResponse = await Api.sendVoice(path);
 
       ///it has
       ///final JobStatus status;
-      ///final bool? prediction;
+      ///final string? prediction;
       ///final double? confidence;
       ///final String? message;
       ///
       ///
+      ///
+      final parsedResponse = await Api.sendVoice(path);
 
-      ///todo: make it return the actual response, i just commented it for testing
-      // return parsedResponse;
-      return VoiceResponse(
-        status: JobStatus.success,
-        prediction: "has Parkinson",
-        confidence: 0.82,
-      );
+
+
+       return parsedResponse;
+
     });
   }
 }

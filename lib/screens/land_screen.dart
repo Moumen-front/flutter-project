@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../utils.dart';
-import '../widgets/analysis_loading.dart';
 import '../widgets/animated_text_button.dart';
-import '../widgets/uploading_loading.dart';
 
 class LandScreen extends ConsumerWidget {
   const LandScreen({super.key});
@@ -27,7 +25,7 @@ class LandScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0),
               child: Placeholder(),
             ),
 

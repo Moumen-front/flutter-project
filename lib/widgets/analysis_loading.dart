@@ -71,7 +71,7 @@ class _AnalysisLoadingIndicatorState extends State<AnalysisLoadingIndicator>
             borderRadius: widget.borderRadius,
             child: AnimatedBuilder(
               animation: _controller,
-              builder: (_, __) {
+              builder: (_, _) {
                 return Align(
                   alignment: Alignment.centerLeft,
                   child: Container(

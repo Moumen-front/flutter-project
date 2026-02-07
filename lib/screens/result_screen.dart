@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +13,8 @@ class ResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
@@ -47,6 +48,27 @@ class _AiRiskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int score = (result.confidence! * 100).toInt();
+    String risk;
+    String output = (result.prediction! =="PD")?"has Parkinson":"doesn't have Parkinson";
+    if(score > 80)
+      {
+        risk = "High Risk";
+      }
+    else if(score > 50)
+      {
+        risk = "moderate Risk";
+      }
+    else if(score > 35)
+    {
+      risk = "slight Risk";
+    }
+    else
+    {
+      risk = "No Risk";
+    }
+
+
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -88,8 +110,8 @@ class _AiRiskCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Moderate Risk',
+                 Text(
+                  risk,
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ],
@@ -101,7 +123,7 @@ class _AiRiskCard extends StatelessWidget {
             children: [
               _label('AI Result:'),
               Text(
-                result.prediction!, // e.g. "Early dysarthric Patterns"
+                output,
                 style: _bodyStyle,
               ),
             ],

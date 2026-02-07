@@ -9,14 +9,14 @@ class HorizontalEllipseGauge extends StatelessWidget {
   final double strokeWidth;
 
   const HorizontalEllipseGauge({
-    Key? key,
+    super.key,
     required this.width,
     required this.height,
     required this.progress,
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.progressColor = Colors.green,
     this.strokeWidth = 10.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
