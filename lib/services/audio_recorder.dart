@@ -45,10 +45,9 @@ class AudioRecorderService {
           .millisecondsSinceEpoch}.wav";
       _filePath = "${directory.path}/$fileName";
     }
-    else{
+    else{ // for testing only
       _filePath = "ignoredname"; // the path parameter is ignored on web
-
-      final directory = await getApplicationDocumentsDirectory(); // to make it crash so the recording don't work , as for now i cant get to make it work smoothly on web, it be so laggy
+      return;
     }
     await _record.start(
       const rec.RecordConfig(

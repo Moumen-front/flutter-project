@@ -196,7 +196,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
               path: '/results',
-              name: 'Analysis Result',
+              name: 'Medical Report',
               builder: (context, state) {
                 final results = state.extra as VoiceResponse;
                 return  ResultScreen(result: results);
@@ -235,6 +235,9 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localProvider);
     return MaterialApp.router(
+      theme: ThemeData(
+        fontFamily: 'Roboto', // Set as default font
+      ),
       debugShowCheckedModeBanner: false,
       routerConfig: ref.watch(routerProvider),
       locale: locale,

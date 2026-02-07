@@ -45,3 +45,7 @@ flutter:
     - family: Neurovive #the icons
       fonts:
         - asset: fonts/Neurovive.ttf
+
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf

@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import './../services/api.dart';
 
 enum JobStatus {
-  success,      // 0
-  error,    // 1
+  success, // 0
+  error, // 1
 }
 
 class VoiceResponse {
@@ -16,27 +18,25 @@ class VoiceResponse {
     required this.status,
     this.prediction,
     this.confidence,
-    this.message
+    this.message,
   });
 
   @override
-  String toString()
-  {
-    switch(status)
-    {
-      case  JobStatus.success:
+  String toString() {
+    switch (status) {
+      case JobStatus.success:
         return "the results are \r\n "
             "Prediction: $prediction \r\n"
             "Confidence: $confidence \r\n";
         break;
-      case JobStatus.error: // this will not occuire since we will go back to the send voice screen instead of here
+      case JobStatus
+          .error: // this will not occuire since we will go back to the send voice screen instead of here
         return "error happened \r\n "
             "Error: $message \r\n";
         break;
     }
     return "impossible error";
   }
-
 
   factory VoiceResponse.fromJson(Map<String, dynamic> json) {
     return VoiceResponse(
@@ -52,12 +52,10 @@ class VoiceResponse {
   }
 }
 
-
-
 final voiceUploadProvider =
-AsyncNotifierProvider<VoiceUploadNotifier, VoiceResponse?>(
-  VoiceUploadNotifier.new,
-);
+    AsyncNotifierProvider<VoiceUploadNotifier, VoiceResponse?>(
+      VoiceUploadNotifier.new,
+    );
 
 class VoiceUploadNotifier extends AsyncNotifier<VoiceResponse?> {
   @override
@@ -69,6 +67,14 @@ class VoiceUploadNotifier extends AsyncNotifier<VoiceResponse?> {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
+      if (kIsWeb) //for testing only
+      {
+        return VoiceResponse(
+          status: JobStatus.success,
+          prediction: "has Parkinson",
+          confidence: 0.82,
+        );
+      }
       final parsedResponse = await Api.sendVoice(path);
 
       ///it has
@@ -79,8 +85,13 @@ class VoiceUploadNotifier extends AsyncNotifier<VoiceResponse?> {
       ///
       ///
 
-
-      return parsedResponse;
+      ///todo: make it return the actual response, i just commented it for testing
+      // return parsedResponse;
+      return VoiceResponse(
+        status: JobStatus.success,
+        prediction: "has Parkinson",
+        confidence: 0.82,
+      );
     });
   }
 }
