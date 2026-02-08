@@ -54,6 +54,9 @@ class AudioRecorderService {
         encoder: rec.AudioEncoder.wav,
           bitRate: 128000,
           sampleRate: 44100,
+        audioInterruption: rec.AudioInterruptionMode.pauseResume,
+        echoCancel: true,
+        noiseSuppress: true
       ),
       path: _filePath,
     );
