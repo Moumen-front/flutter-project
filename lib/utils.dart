@@ -26,7 +26,7 @@ Future<bool> handleBack(BuildContext context) async { //this has the back button
     return false; // no pop
   }
 
-  if(location == '/voice')///todo: change this to landscreen when it is added
+  if(location == '/')
     {
       exit(0);
     }

@@ -29,6 +29,11 @@ dependencies:
   http: ^1.6.0
   rename_app: ^1.6.5
 
+  opencv_dart: ^2.2.1+1
+  camera:
+  dartcv4: ^2.2.1+1
+  image: ^4.0.17
+  image_picker: ^1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

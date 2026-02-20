@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../notifiers/voice_upload_notifier.dart';
 
 class Api {
-  static const _baseurl = "https://webhook.site/94c9e5f8-1874-402d-8e26-a1034849d962";
+  static const _baseurl = "https://webhook.site/db41ae08-822c-48fd-8177-a74901b6122d";
 
   static Future<VoiceResponse> sendVoice(String path) async {
     final wavFile = File(path);

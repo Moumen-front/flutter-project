@@ -18,7 +18,7 @@ import 'notifiers/voice_upload_notifier.dart';
 //router provider
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/voice',
+    initialLocation: '/',
     redirect: (context, state) {
       return null;
     },
@@ -76,9 +76,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                     appBar: AppBar(
                       elevation: 0,
                       leading: !(currentPath == '/' ||
-                          currentPath == '/sendvoice' || currentPath == '/voice')
+                          currentPath == '/sendvoice' )
 
-                      ///todo: remove /voice from here when you add the landing screen
                           ? IconButton(
                         onPressed: () {
                          handleBack(context);
@@ -176,7 +175,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: const HandwritingScreen(),
+                child: const LiveShapeDetectionScreen(),
                 transitionDuration: const Duration(milliseconds: 10),
                 // Hero duration
                 transitionsBuilder:
